@@ -1,10 +1,20 @@
 Analyze the following Python code and return a JSON array of issues.
 
-Focus on patterns such as:
-- bare except blocks
-- print statements in non-demo code
-- TODO comments
-- logic that could hide errors
+Look carefully for these patterns (not limited to):
+- bare `except:` blocks that swallow all exceptions silently
+- catching broad exceptions without logging or re-raising
+- mutable default arguments (e.g., `def f(x=[]):` or `def f(d={}):`)
+- operations on values that could be None without a prior None check
+- print statements used instead of proper logging
+- TODO or FIXME comments indicating unfinished or placeholder logic
+- hardcoded credentials, tokens, secrets, or API keys
+- empty except blocks or bare `pass` that silently ignore errors
+- resource leaks — files or connections opened without a context manager
+- unused variables or imports that add noise and confusion
+- unbounded loops with no clear termination condition
+- logic errors such as off-by-one, wrong comparison operator, or unreachable code
+
+Only flag real, specific issues — avoid false positives. Do not flag idiomatic Python or patterns that are clearly intentional and safe.
 
 Python code:
 {{CODE}}

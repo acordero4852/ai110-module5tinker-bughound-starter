@@ -63,6 +63,19 @@ def assess_risk(
         reasons.append("Bare except was modified, verify correctness.")
 
     # ----------------------------
+    # New try/except blocks introduced
+    # ----------------------------
+    original_try_count = original_code.count("try:")
+    fixed_try_count = fixed_code.count("try:")
+    added_try_blocks = fixed_try_count - original_try_count
+    if added_try_blocks > 0:
+        score -= 15 * added_try_blocks
+        reasons.append(
+            f"Fix introduces {added_try_blocks} new try/except block(s); "
+            "verify they don't suppress errors rather than fix them."
+        )
+
+    # ----------------------------
     # Clamp score
     # ----------------------------
     score = max(0, min(100, score))
@@ -80,7 +93,10 @@ def assess_risk(
     # ----------------------------
     # Auto-fix policy
     # ----------------------------
-    should_autofix = level == "low"
+    has_high_severity = any(
+        str(i.get("severity", "")).lower() == "high" for i in issues
+    )
+    should_autofix = level == "low" and score >= 85 and not has_high_severity
 
     if not reasons:
         reasons.append("No significant risks detected.")

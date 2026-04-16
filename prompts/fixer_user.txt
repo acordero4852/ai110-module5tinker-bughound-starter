@@ -1,11 +1,10 @@
-You are given:
-1) A list of detected issues (JSON)
-2) The original Python code
+You are given a list of detected issues and the original Python code.
+Rewrite the code to fix every listed issue, following the rules in your system instructions.
 
-Rewrite the code to address the issues.
-
-Issues:
+Issues (JSON):
 {{ISSUES}}
 
 Original code:
 {{CODE}}
+
+Return only the corrected Python code with no additional text.
